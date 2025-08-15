@@ -1,0 +1,55 @@
+name: Esteira de Desenvolvimento (Sequencial)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  fase_01_checkout:
+    name: Fase 1 — Checkout
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      - run: echo "Fase 1 concluída."
+
+  fase_02_install:
+    name: Fase 2 — Instalação de Dependências
+    runs-on: ubuntu-latest
+    needs: [ fase_01_checkout ]
+    steps:
+      - run: echo "Instalando dependências..."
+      - run: echo "Fase 2 concluída."
+
+  fase_03_build:
+    name: Fase 3 — Build
+    runs-on: ubuntu-latest
+    needs: [ fase_02_install ]
+    steps:
+      - run: echo "Executando build do projeto..."
+      - run: echo "Fase 3 concluída."
+
+  fase_04_test:
+    name: Fase 4 — Testes
+    runs-on: ubuntu-latest
+    needs: [ fase_03_build ]
+    steps:
+      - run: echo "Executando testes automatizados..."
+      - run: echo "Fase 4 concluída."
+
+  fase_05_quality:
+    name: Fase 5 — Análise de Qualidade
+    runs-on: ubuntu-latest
+    needs: [ fase_04_test ]
+    steps:
+      - run: echo "Analisando qualidade do código..."
+      - run: echo "Fase 5 concluída."
+
+  fase_06_deploy:
+    name: Fase 6 — Deploy
+    runs-on: ubuntu-latest
+    needs: [ fase_05_quality ]
+    steps:
+      - run: echo "Realizando deploy..."
+      - run: echo "Fase 6 concluída."
