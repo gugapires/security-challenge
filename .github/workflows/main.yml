@@ -1,4 +1,4 @@
-name: Esteira de Desenvolvimento (Sequencial)
+name: Esteira de Desenvolvimento / Pipeline
 
 on:
   push:
