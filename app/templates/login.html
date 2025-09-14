@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Login</title></head>
+<body>
+  <h2>Login</h2>
+  <form method="POST">
+    Email: <input type="email" name="email"><br>
+    Senha: <input type="password" name="senha"><br>
+    <button type="submit">Entrar</button>
+  </form>
+  <a href="{{ url_for('register') }}">Cadastrar</a>
+</body>
+</html>
