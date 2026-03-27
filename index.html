@@ -1,11 +1,402 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste GitHub Pages</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explorer do Repositório</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(255,255,255,0.08);
+      --panel-border: rgba(255,255,255,0.12);
+      --text: #eef2ff;
+      --muted: #aab4d6;
+      --accent: #7c9cff;
+      --accent-2: #4de2c5;
+      --shadow: 0 20px 50px rgba(0,0,0,0.35);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124,156,255,0.25), transparent 25%),
+        radial-gradient(circle at top right, rgba(77,226,197,0.18), transparent 20%),
+        linear-gradient(180deg, #0b1020 0%, #0a0f1a 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .title {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+      align-items: center;
+    }
+
+    .search {
+      flex: 1 1 260px;
+      min-width: 220px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .btn {
+      border: 1px solid var(--panel-border);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 11px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      background: rgba(255,255,255,0.14);
+    }
+
+    .meta {
+      margin: 18px 0 10px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 24px;
+      color: var(--muted);
+    }
+
+    .crumb {
+      cursor: pointer;
+      color: var(--accent-2);
+    }
+
+    .crumb:hover {
+      text-decoration: underline;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124,156,255,0.45);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .name {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .type {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .link {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .status {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--panel-border);
+      color: var(--muted);
+    }
+
+    .footer-note {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Funcionando</h1>
+  <div class="container">
+    <section class="hero">
+      <h1 class="title">Explorer do Repositório</h1>
+      <p class="subtitle">
+        Navegação visual das pastas e arquivos do projeto hospedado no GitHub.
+      </p>
+
+      <div class="toolbar">
+        <input id="searchInput" class="search" type="text" placeholder="Filtrar pastas e arquivos..." />
+        <button id="backBtn" class="btn">Voltar</button>
+        <button id="rootBtn" class="btn">Ir para raiz</button>
+      </div>
+
+      <div class="meta">
+        <span><strong>Owner:</strong> <span id="ownerLabel"></span></span>
+        <span><strong>Repo:</strong> <span id="repoLabel"></span></span>
+        <span><strong>Branch:</strong> <span id="branchLabel"></span></span>
+      </div>
+    </section>
+
+    <div id="breadcrumb" class="breadcrumb"></div>
+    <div id="content" class="grid"></div>
+    <div id="footerNote" class="footer-note"></div>
+  </div>
+
+  <script>
+    // =========================
+    // CONFIGURE AQUI
+    // =========================
+    const OWNER = "gugapires";
+    const REPO = "security-challenge";
+    const BRANCH = "main";
+    // =========================
+
+    const contentEl = document.getElementById("content");
+    const breadcrumbEl = document.getElementById("breadcrumb");
+    const searchInput = document.getElementById("searchInput");
+    const backBtn = document.getElementById("backBtn");
+    const rootBtn = document.getElementById("rootBtn");
+    const footerNote = document.getElementById("footerNote");
+
+    document.getElementById("ownerLabel").textContent = OWNER;
+    document.getElementById("repoLabel").textContent = REPO;
+    document.getElementById("branchLabel").textContent = BRANCH;
+
+    let currentPath = "";
+    let historyStack = [];
+    let currentItems = [];
+
+    function encodePath(path) {
+      return path
+        .split("/")
+        .filter(Boolean)
+        .map(encodeURIComponent)
+        .join("/");
+    }
+
+    function buildApiUrl(path = "") {
+      const encodedPath = encodePath(path);
+      const base = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+      const url = encodedPath ? `${base}/${encodedPath}?ref=${BRANCH}` : `${base}?ref=${BRANCH}`;
+      return url;
+    }
+
+    function buildRepoUrl(path = "") {
+      const encodedPath = path ? `/${path}` : "";
+      return `https://github.com/${OWNER}/${REPO}/tree/${BRANCH}${encodedPath}`;
+    }
+
+    async function loadPath(path = "", pushHistory = true) {
+      contentEl.innerHTML = `<div class="status">Carregando conteúdo...</div>`;
+      footerNote.textContent = "";
+
+      try {
+        const response = await fetch(buildApiUrl(path), {
+          headers: {
+            "Accept": "application/vnd.github+json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro ${response.status}: não foi possível carregar o conteúdo.`);
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("O caminho informado não retornou uma pasta.");
+        }
+
+        if (pushHistory && currentPath !== path) {
+          historyStack.push(currentPath);
+        }
+
+        currentPath = path;
+        currentItems = data.sort((a, b) => {
+          if (a.type === "dir" && b.type !== "dir") return -1;
+          if (a.type !== "dir" && b.type === "dir") return 1;
+          return a.name.localeCompare(b.name);
+        });
+
+        renderBreadcrumb();
+        renderItems(currentItems);
+
+        footerNote.innerHTML = `
+          Visualizando: <code>${currentPath || "/"}</code> ·
+          <a class="link" href="${buildRepoUrl(currentPath)}" target="_blank" rel="noopener noreferrer">Abrir esta pasta no GitHub</a>
+        `;
+      } catch (error) {
+        contentEl.innerHTML = `<div class="status">${error.message}</div>`;
+      }
+    }
+
+    function renderBreadcrumb() {
+      const parts = currentPath.split("/").filter(Boolean);
+      breadcrumbEl.innerHTML = "";
+
+      const root = document.createElement("span");
+      root.className = "crumb";
+      root.textContent = "raiz";
+      root.onclick = () => loadPath("");
+      breadcrumbEl.appendChild(root);
+
+      let cumulative = "";
+      parts.forEach((part) => {
+        const separator = document.createElement("span");
+        separator.textContent = " / ";
+        separator.style.color = "var(--muted)";
+        breadcrumbEl.appendChild(separator);
+
+        cumulative += (cumulative ? "/" : "") + part;
+
+        const crumb = document.createElement("span");
+        crumb.className = "crumb";
+        crumb.textContent = part;
+        crumb.onclick = () => loadPath(cumulative);
+        breadcrumbEl.appendChild(crumb);
+      });
+    }
+
+    function renderItems(items) {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = items.filter(item => item.name.toLowerCase().includes(query));
+
+      if (!filtered.length) {
+        contentEl.innerHTML = `<div class="status">Nenhum item encontrado para o filtro atual.</div>`;
+        return;
+      }
+
+      contentEl.innerHTML = filtered.map(item => {
+        const isDir = item.type === "dir";
+        const icon = isDir ? "📁" : "📄";
+        const safePath = item.path.replace(/"/g, "&quot;");
+        const githubUrl = item.html_url;
+
+        return `
+          <article class="card">
+            <div>
+              <div class="icon">${icon}</div>
+              <div class="name">${item.name}</div>
+              <div class="type">${isDir ? "Pasta" : "Arquivo"}</div>
+            </div>
+            <div class="actions">
+              ${
+                isDir
+                  ? `<a class="link" href="#" onclick="openFolder('${safePath}'); return false;">Abrir</a>`
+                  : `<a class="link" href="${githubUrl}" target="_blank" rel="noopener noreferrer">Ver no GitHub</a>`
+              }
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function openFolder(path) {
+      loadPath(path);
+    }
+
+    backBtn.addEventListener("click", () => {
+      const previous = historyStack.pop();
+      if (previous !== undefined) {
+        loadPath(previous, false);
+      }
+    });
+
+    rootBtn.addEventListener("click", () => {
+      loadPath("");
+    });
+
+    searchInput.addEventListener("input", () => {
+      renderItems(currentItems);
+    });
+
+    window.openFolder = openFolder;
+
+    loadPath("");
+  </script>
 </body>
 </html>
